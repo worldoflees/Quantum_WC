@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QNN Wireless Framework - Processing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .card {
+      background: #1e1e2e;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      border: 1px solid #2d2d3d;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      padding: 25px 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2em;
+      font-weight: 700;
+      margin-bottom: 5px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      color: #00d4ff;
+    }
+
+    .header p {
+      font-size: 0.9em;
+      opacity: 0.85;
+      font-weight: 300;
+      color: #b0b0c0;
+    }
+
+    .content {
+      padding: 25px 30px;
+    }
+
+    .process-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #2a2a3e;
+      border-left: 4px solid #3d3d5c;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .step.active {
+      border-left-color: #00d4ff;
+      background: #2d2d3e;
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+    }
+
+    .step.completed {
+      border-left-color: #10b981;
+    }
+
+    .step-icon {
+      font-size: 1.2em;
+      min-width: 30px;
+    }
+
+    .step-text {
+      flex: 1;
+      color: #c0c0d0;
+      font-weight: 500;
+      font-size: 0.9em;
+    }
+
+    .step-status {
+      font-size: 0.8em;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .step.active .step-status {
+      color: #00d4ff;
+    }
+
+    .step.completed .step-status {
+      color: #10b981;
+    }
+
+    .loading-animation {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 15px 0;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #00d4ff;
+      animation: bounce 1.4s infinite;
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: translateY(0);
+        opacity: 0.5;
+      }
+      40% {
+        transform: translateY(-8px);
+        opacity: 1;
+      }
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #2d2d3d;
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00d4ff 0%, #0099cc 100%);
+      width: 0%;
+      animation: progress 3s ease-in-out forwards;
+    }
+
+    @keyframes progress {
+      0% { width: 0%; }
+      50% { width: 50%; }
+      100% { width: 100%; }
+    }
+
+    .status-text {
+      text-align: center;
+      color: #b0b0c0;
+      margin-top: 12px;
+      font-size: 0.85em;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 12px;
+      color: #666;
+      font-size: 0.75em;
+      border-top: 1px solid #2d2d3d;
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.6;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <h1>⚡ Processing</h1>
+        <p>Executing Quantum Neural Network</p>
+      </div>
+
+      <div class="content">
+        <div class="process-steps" id="stepsContainer">
+          <div class="step active" id="step1">
+            <div class="step-icon">⚛️</div>
+            <div class="step-text">Initializing Quantum Neural Network</div>
+            <div class="step-status" id="status1">Running</div>
+          </div>
+
+          <div class="step" id="step2">
+            <div class="step-icon">📡</div>
+            <div class="step-text">Applying Wireless Channel Model</div>
+            <div class="step-status" id="status2">Pending</div>
+          </div>
+
+          <div class="step" id="step3">
+            <div class="step-icon">🧠</div>
+            <div class="step-text">Quantum Learning Optimization</div>
+            <div class="step-status" id="status3">Pending</div>
+          </div>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+
+        <div class="loading-animation">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+
+        <div class="status-text pulse">
+          <span id="statusMessage">Processing your quantum circuit...</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>Hybrid Quantum-Classical Framework | Processing Data</p>
+      </div>
+    </div>
+  </div>
+
+<script>
+let currentStep = 1;
+
+function updateStep(stepNum) {
+  // Complete previous step
+  if (stepNum > 1) {
+    const prevStep = document.getElementById(`step${stepNum - 1}`);
+    prevStep.classList.remove("active");
+    prevStep.classList.add("completed");
+    document.getElementById(`status${stepNum - 1}`).textContent = "✓ Completed";
+  }
+
+  // Activate current step
+  if (stepNum <= 3) {
+    document.getElementById(`step${stepNum}`).classList.add("active");
+    document.getElementById(`status${stepNum}`).textContent = "Running";
+  }
+}
+
+function completeProcessing() {
+  // Complete last step
+  const lastStep = document.getElementById("step3");
+  lastStep.classList.remove("active");
+  lastStep.classList.add("completed");
+  document.getElementById("status3").textContent = "✓ Completed";
+
+  // Update status message
+  document.getElementById("statusMessage").textContent = "Processing complete! Redirecting...";
+
+  // Calculate accuracy
+  let snr = parseFloat(localStorage.getItem("snr")) || 10;
+  let qubits = parseInt(localStorage.getItem("qubits")) || 2;
+
+  let accuracy = Math.min(100, (snr * qubits) / 10 + Math.random() * 20);
+  localStorage.setItem("accuracy", accuracy.toFixed(2));
+
+  // Redirect after a delay
+  setTimeout(() => {
+    window.location.href = "output.html";
+  }, 1500);
+}
+
+// Execute steps
+setTimeout(() => updateStep(2), 1000);
+setTimeout(() => updateStep(3), 2000);
+setTimeout(() => completeProcessing(), 3000);
+</script>
+
+</body>
+</html>
+

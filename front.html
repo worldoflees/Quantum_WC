@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚛️ QNN Wireless Framework</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --secondary: #8b5cf6;
+            --dark-bg: #0a0a1a;
+            --card-bg: #12122d;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f0f23 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass-card {
+            background: rgba(18, 18, 45, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .quantum-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .quantum-grid {
+            background: 
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .status-online {
+            background-color: var(--success);
+            box-shadow: 0 0 10px var(--success);
+        }
+
+        .status-processing {
+            background-color: var(--warning);
+            box-shadow: 0 0 10px var(--warning);
+            animation: pulse 1.5s infinite;
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .terminal-style {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #00ff88;
+            border-left: 4px solid var(--primary);
+        }
+
+        .terminal-line {
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .terminal-prompt {
+            color: var(--primary);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="quantum-grid">
+    <!-- Navigation Bar -->
+    <nav class="glass-card fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                            <i class="fas fa-atom text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold">QNN Wireless</h1>
+                            <p class="text-xs text-gray-400">Quantum Neural Network Framework</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-300 hover:text-white transition">Home</a>
+                    <a href="#features" class="text-gray-300 hover:text-white transition">Features</a>
+                    <a href="#simulation" class="text-gray-300 hover:text-white transition">Simulation</a>
+                    <a href="#results" class="text-gray-300 hover:text-white transition">Results</a>
+                    <a href="#about" class="text-gray-300 hover:text-white transition">About</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <span class="status-indicator status-online"></span>
+                        <span class="text-sm text-green-400">Quantum Ready</span>
+                    </div>
+                    <button onclick="launchPythonApp()" class="btn-primary px-6 py-2 rounded-lg font-medium">
+                        <i class="fas fa-play mr-2"></i>Launch App
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-32 pb-20">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="fade-in">
+                    <div class="inline-flex items-center space-x-2 mb-6">
+                        <span class="px-3 py-1 bg-cyan-900/30 text-cyan-400 rounded-full text-sm">v2.0.0</span>
+                        <span class="px-3 py-1 bg-purple-900/30 text-purple-400 rounded-full text-sm">Quantum Enhanced</span>
+                    </div>
+                    
+                    <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-6">
+                        <span class="quantum-gradient">Quantum-Powered</span><br>
+                        Wireless Optimization
+                    </h1>
+                    
+                    <p class="text-xl text-gray-400 mb-8 leading-relaxed">
+                        Harness the power of Quantum Neural Networks to revolutionize wireless communication. 
+                        Experience unprecedented speed, efficiency, and intelligence in network optimization.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 mb-12">
+                        <button onclick="launchPythonApp()" class="btn-primary px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center">
+                            <i class="fas fa-rocket mr-3"></i>
+                            Start Quantum Simulation
+                        </button>
+                        <button onclick="scrollToSection('features')" class="btn-secondary px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center">
+                            <i class="fas fa-info-circle mr-3"></i>
+                            Learn More
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center space-x-8">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-cyan-400">99.9%</div>
+                            <div class="text-sm text-gray-400">Accuracy</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-purple-400">10x</div>
+                            <div class="text-sm text-gray-400">Speedup</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-green-400">50%</div>
+                            <div class="text-sm text-gray-400">Energy Save</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="glass-card rounded-2xl p-8 floating">
+                        <div class="terminal-style mb-6">
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">$</span>
+                                <span>python qnn_wireless_framework.py</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">></span>
+                                <span class="text-cyan-400">Initializing Quantum Neural Network...</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">></span>
+                                <span class="text-green-400">✓ Quantum circuits created (4 qubits)</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">></span>
+                                <span class="text-yellow-400">Training on wireless dataset...</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">></span>
+                                <span class="text-green-400">✓ Model trained successfully (98.7% accuracy)</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">></span>
+                                <span class="text-cyan-400">Quantum Speedup: 8.5x achieved</span>
+                            </div>
+                        </div>
+                        
+                        <div class="relative">
+                            <canvas id="quantumChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-black/30">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Revolutionary Features</h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Powered by cutting-edge quantum computing and neural network technologies
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass-card rounded-2xl p-8 hover:glow-effect transition-all duration-300">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mb-6">
+                        <i class="fas fa-brain text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Quantum Neural Networks</h3>
+                    <p class="text-gray-400 mb-6">
+                        Hybrid quantum-classical neural networks that leverage quantum superposition for exponential speedup in wireless optimization.
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-3"></i>
+                            <span>Quantum circuit optimization</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-3"></i>
+                            <span>Real-time learning adaptation</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-3"></i>
+                            <span>Multi-qubit entanglement</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="glass-card rounded-2xl p-8 hover:glow-effect transition-all duration-300">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-6">
+                        <i class="fas fa-satellite-dish text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Advanced Wireless Models</h3>
+                    <p class="text-gray-400 mb-6">
+                        Comprehensive wireless channel simulations including AWGN, Rayleigh, and Rician fading models for realistic testing.
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-3"></i>
+                            <span>Multiple channel models</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-3"></i>
+                            <span>Noise and interference simulation</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-3"></i>
+                            <span>Signal processing algorithms</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="glass-card rounded-2xl p-8 hover:glow-effect transition-all duration-300">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-line text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Real-time Analytics</h3>
+                    <p class="text-gray-400 mb-6">
+                        Comprehensive visualization and analytics dashboard showing quantum speedup, accuracy improvements, and energy efficiency.
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-3"></i>
+                            <span>Live performance metrics</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-3"></i>
+                            <span>Interactive visualizations</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-3"></i>
+                            <span>Export results to JSON/CSV</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simulation Interface -->
+    <section id="simulation" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Interactive Simulation</h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Configure and run quantum neural network simulations with real-time results
+                </p>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-8 max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Left Panel - Configuration -->
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Simulation Parameters</h3>
+                        
+                        <div class="space-y-6">
+                            <!-- SNR Control -->
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <label class="font-medium">Signal-to-Noise Ratio (SNR)</label>
+                                    <span id="snrValue" class="text-cyan-400 font-bold">10 dB</span>
+                                </div>
+                                <input type="range" id="snrSlider" min="0" max="30" value="10" 
+                                       class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer">
+                                <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                    <span>0 dB</span>
+                                    <span>30 dB</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Qubits Selection -->
+                            <div>
+                                <label class="font-medium mb-3 block">Number of Qubits</label>
+                                <div class="grid grid-cols-4 gap-2">
+                                    <button class="qubit-option py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition" data-qubits="1">
+                                        1 Qubit
+                                    </button>
+                                    <button class="qubit-option py-3 rounded-lg bg-cyan-900 text-cyan-300 glow-effect" data-qubits="2">
+                                        2 Qubits
+                                    </button>
+                                    <button class="qubit-option py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition" data-qubits="3">
+                                        3 Qubits
+                                    </button>
+                                    <button class="qubit-option py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition" data-qubits="4">
+                                        4 Qubits
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Channel Model -->
+                            <div>
+                                <label class="font-medium mb-3 block">Channel Model</label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button class="channel-option py-3 rounded-lg bg-blue-900 text-blue-300 glow-effect" data-channel="AWGN">
+                                        AWGN
+                                    </button>
+                                    <button class="channel-option py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition" data-channel="Rayleigh">
+                                        Rayleigh
+                                    </button>
+                                    <button class="channel-option py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition" data-channel="Rician">
+                                        Rician
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Advanced Settings -->
+                            <div>
+                                <label class="font-medium mb-3 block">Advanced Settings</label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-sm text-gray-400 block mb-2">Training Epochs</label>
+                                        <input type="number" id="epochs" value="30" min="10" max="100" 
+                                               class="w-full px-3 py-2 bg-gray-800 rounded border border-gray-700 focus:border-cyan-500 outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-sm text-gray-400 block mb-2">Sample Size</label>
+                                        <input type="number" id="samples" value="50" min="20" max="200" 
+                                               class="w-full px-3 py-2 bg-gray-800 rounded border border-gray-700 focus:border-cyan-500 outline-none">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Panel - Preview -->
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Expected Performance</h3>
+                        
+                        <div class="space-y-6">
+                            <!-- Performance Metrics -->
+                            <div class="glass-card rounded-xl p-6">
+                                <div class="space-y-4">
+                                    <div>
+                                        <div class="flex justify-between mb-2">
+                                            <span class="text-gray-400">Detection Accuracy</span>
+                                            <span id="expectedAccuracy" class="font-bold text-green-400">85%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-800 rounded-full h-2">
+                                            <div id="accuracyBar" class="bg-gradient-to-r from-green-400 to-cyan-400 h-2 rounded-full w-4/5"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="flex justify-between mb-2">
+                                            <span class="text-gray-400">Quantum Speedup</span>
+                                            <span id="expectedSpeedup" class="font-bold text-purple-400">3.2x</span>
+                                        </div>
+                                        <div class="w-full bg-gray-800 rounded-full h-2">
+                                            <div id="speedupBar" class="bg-gradient-to-r from-purple-400 to-pink-400 h-2 rounded-full w-3/5"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Quantum Circuit Preview -->
+                            <div class="glass-card rounded-xl p-6">
+                                <h4 class="font-medium mb-4">Quantum Circuit Preview</h4>
+                                <div class="flex items-center justify-center h-32">
+                                    <div class="relative">
+                                        <div class="w-48 h-24 border-2 border-cyan-400/30 rounded-lg flex items-center justify-center">
+                                            <div class="flex space-x-8">
+                                                <div class="flex flex-col items-center">
+                                                    <div class="w-4 h-4 rounded-full bg-cyan-400 mb-2"></div>
+                                                    <div class="text-xs text-cyan-400">Qubit 1</div>
+                                                </div>
+                                                <div class="flex flex-col items-center">
+                                                    <div class="w-4 h-4 rounded-full bg-cyan-400 mb-2"></div>
+                                                    <div class="text-xs text-cyan-400">Qubit 2</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="absolute -top-2 -right-2 w-4 h-4 bg-cyan-400 rounded-full pulse-animation"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Status -->
+                            <div class="glass-card rounded-xl p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <div class="flex items-center mb-2">
+                                            <span class="status-indicator status-online"></span>
+                                            <span class="font-medium">System Ready</span>
+                                        </div>
+                                        <p class="text-sm text-gray-400">Quantum backend is online</p>
+                                    </div>
+                                    <button onclick="launchPythonApp()" class="btn-primary px-6 py-3 rounded-lg font-medium">
+                                        <i class="fas fa-play mr-2"></i>Run Simulation
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="py-20 bg-black/30">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Performance Results</h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    See how quantum neural networks outperform classical approaches
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <!-- Performance Comparison -->
+                <div class="glass-card rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold mb-6">Quantum vs Classical</h3>
+                    <canvas id="comparisonChart" height="300"></canvas>
+                </div>
+                
+                <!-- Metrics Dashboard -->
+                <div class="glass-card rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold mb-6">Real-time Metrics</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-900/50 rounded-xl p-6 text-center">
+                            <div class="text-4xl font-bold text-cyan-400 mb-2">98.7%</div>
+                            <div class="text-gray-400">Accuracy</div>
+                        </div>
+                        <div class="bg-gray-900/50 rounded-xl p-6 text-center">
+                            <div class="text-4xl font-bold text-purple-400 mb-2">8.5x</div>
+                            <div class="text-gray-400">Speedup</div>
+                        </div>
+                        <div class="bg-gray-900/50 rounded-xl p-6 text-center">
+                            <div class="text-4xl font-bold text-green-400 mb-2">50%</div>
+                            <div class="text-gray-400">Energy Save</div>
+                        </div>
+                        <div class="bg-gray-900/50 rounded-xl p-6 text-center">
+                            <div class="text-4xl font-bold text-yellow-400 mb-2">12ms</div>
+                            <div class="text-gray-400">Latency</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="fas fa-atom text-cyan-400 text-xl"></i>
+                        <span class="text-xl font-bold">QNN Wireless</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Quantum Neural Network Framework v2.0</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fas fa-envelope text-xl"></i>
+                    </a>
+                </div>
+                
+                <div class="mt-4 md:mt-0">
+                    <p class="text-gray-400 text-sm">© 2024 Quantum Computing Lab. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize charts
+        function initializeCharts() {
+            // Quantum Progress Chart
+            const ctx1 = document.getElementById('quantumChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Epoch 1', 'Epoch 5', 'Epoch 10', 'Epoch 15', 'Epoch 20', 'Epoch 25', 'Epoch 30'],
+                    datasets: [{
+                        label: 'Training Cost',
+                        data: [2.5, 1.8, 1.2, 0.8, 0.5, 0.3, 0.15],
+                        borderColor: '#00d4ff',
+                        backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Comparison Chart
+            const ctx2 = document.getElementById('comparisonChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Accuracy', 'Speed', 'Efficiency', 'Latency'],
+                    datasets: [
+                        {
+                            label: 'Classical NN',
+                            data: [85, 1.0, 70, 20],
+                            backgroundColor: 'rgba(148, 163, 184, 0.7)',
+                            borderColor: 'rgba(148, 163, 184, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Quantum NN',
+                            data: [98, 8.5, 95, 12],
+                            backgroundColor: 'rgba(0, 212, 255, 0.7)',
+                            borderColor: 'rgba(0, 212, 255, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update expected performance
+        function updateExpectedPerformance() {
+            const snr = parseInt(document.getElementById('snrSlider').value);
+            const qubits = parseInt(document.querySelector('.qubit-option.glow-effect')?.dataset.qubits || '2');
+            
+            const expectedAccuracy = Math.min(100, 70 + (qubits * 5) + (snr / 3));
+            const expectedSpeedup = 1 + (qubits / 5) + (snr / 30);
+            
+            document.getElementById('expectedAccuracy').textContent = `${expectedAccuracy.toFixed(0)}%`;
+            document.getElementById('expectedSpeedup').textContent = `${expectedSpeedup.toFixed(1)}x`;
+            
+            document.getElementById('accuracyBar').style.width = `${expectedAccuracy}%`;
+            document.getElementById('speedupBar').style.width = `${Math.min(100, expectedSpeedup * 20)}%`;
+        }
+
+        // Launch Python application
+        function launchPythonApp() {
+            // Get current configuration
+            const snr = document.getElementById('snrSlider').value;
+            const qubits = document.querySelector('.qubit-option.glow-effect')?.dataset.qubits || '2';
+            const channel = document.querySelector('.channel-option.glow-effect')?.dataset.channel || 'AWGN';
+            const epochs = document.getElementById('epochs').value;
+            const samples = document.getElementById('samples').value;
+            
+            // Store configuration
+            const config = {
+                snr: parseFloat(snr),
+                qubits: parseInt(qubits),
+                channel: channel,
+                epochs: parseInt(epochs),
+                samples: parseInt(samples)
+            };
+            
+            localStorage.setItem('qnn_config', JSON.stringify(config));
+            
+            // Show launch message
+            alert(`Launching Python Application with configuration:\n\n` +
+                  `SNR: ${config.snr} dB\n` +
+                  `Qubits: ${config.qubits}\n` +
+                  `Channel: ${config.channel}\n` +
+                  `Epochs: ${config.epochs}\n` +
+                  `Samples: ${config.samples}\n\n` +
+                  `Please run: python qnn_wireless_framework.py`);
+            
+            // You can also trigger download of a configuration file
+            downloadConfig(config);
+        }
+
+        // Download configuration as JSON
+        function downloadConfig(config) {
+            const dataStr = JSON.stringify(config, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'qnn_config.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        // Smooth scrolling
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            updateExpectedPerformance();
+            
+            // SNR slider
+            document.getElementById('snrSlider').addEventListener('input', function() {
+                document.getElementById('snrValue').textContent = `${this.value} dB`;
+                updateExpectedPerformance();
+            });
+            
+            // Qubit selection
+            document.querySelectorAll('.qubit-option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.qubit-option').forEach(b => {
+                        b.classList.remove('bg-cyan-900', 'text-cyan-300', 'glow-effect');
+                        b.classList.add('bg-gray-800');
+                    });
+                    this.classList.add('bg-cyan-900', 'text-cyan-300', 'glow-effect');
+                    this.classList.remove('bg-gray-800');
+                    updateExpectedPerformance();
+                });
+            });
+            
+            // Channel selection
+            document.querySelectorAll('.channel-option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.channel-option').forEach(b => {
+                        b.classList.remove('bg-blue-900', 'text-blue-300', 'glow-effect');
+                        b.classList.add('bg-gray-800');
+                    });
+                    this.classList.add('bg-blue-900', 'text-blue-300', 'glow-effect');
+                    this.classList.remove('bg-gray-800');
+                    updateExpectedPerformance();
+                });
+            });
+            
+            // Advanced settings
+            document.getElementById('epochs').addEventListener('input', updateExpectedPerformance);
+            document.getElementById('samples').addEventListener('input', updateExpectedPerformance);
+            
+            // Navigation highlighting
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= (sectionTop - 300)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('text-white');
+                    link.classList.add('text-gray-300');
+                    
+                    if (link.getAttribute('href') === `#${current}`) {
+                       

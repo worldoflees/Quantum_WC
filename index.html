@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QNN Wireless Framework</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .card {
+      background: #1e1e2e;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      border: 1px solid #2d2d3d;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2em;
+      font-weight: 700;
+      margin-bottom: 5px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      color: #00d4ff;
+    }
+
+    .header p {
+      font-size: 0.9em;
+      opacity: 0.95;
+      font-weight: 300;
+    }
+
+    .content {
+      padding: 25px 30px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: #e0e0ff;
+      margin-bottom: 6px;
+      font-size: 0.9em;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #2d2d3d;
+      border-radius: 10px;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      background-color: #2a2a3e;
+      color: #e0e0ff;
+    }
+
+    input[type="number"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #00d4ff;
+      background-color: #323245;
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    }
+
+    input[type="number"]:hover,
+    select:hover {
+      border-color: #00d4ff;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 15px;
+      color: #00d4ff;
+      font-size: 1.2em;
+      pointer-events: none;
+    }
+
+    .info-box {
+      background: linear-gradient(135deg, #00d4ff15 0%, #00d4ff0f 100%);
+      border-left: 4px solid #00d4ff;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      color: #c0c0d0;
+      font-size: 0.85em;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    button {
+      flex: 1;
+      padding: 11px 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.9em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+      color: #000;
+      box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(0, 212, 255, 0.5);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: #2a2a3e;
+      color: #e0e0ff;
+      border: 2px solid #3d3d5c;
+    }
+
+    .btn-secondary:hover {
+      background: #323245;
+      border-color: #00d4ff;
+    }
+
+    .backend-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 10px;
+      background: #2a2a3e;
+      border-radius: 8px;
+      font-size: 0.8em;
+      color: #b0b0c0;
+    }
+
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    .status-indicator.connected {
+      background-color: #10b981;
+    }
+
+    .status-indicator.disconnected {
+      background-color: #ef4444;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .footer {
+      text-align: center;
+      padding: 12px;
+      color: #666;
+      font-size: 0.75em;
+      border-top: 1px solid #2d2d3d;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .spinner {
+      border: 4px solid #2d2d3d;
+      border-top: 4px solid #00d4ff;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <h1>⚛️ QNN Wireless</h1>
+        <p>Quantum Neural Network Framework</p>
+      </div>
+
+      <div class="content">
+        <div class="info-box">
+          Configure your quantum neural network parameters to analyze wireless signal processing using quantum circuits.
+        </div>
+
+        <div class="form-group">
+          <label for="snr">Signal-to-Noise Ratio (SNR) [dB]</label>
+          <div class="input-wrapper">
+            <input 
+              id="snr" 
+              type="number" 
+              placeholder="e.g., 10"
+              value="10"
+              min="0"
+              max="30"
+              step="0.5"
+            >
+            <span class="input-icon">📊</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="qubits">Number of Qubits</label>
+          <div class="input-wrapper">
+            <input 
+              id="qubits" 
+              type="number" 
+              placeholder="e.g., 2"
+              value="2"
+              min="1"
+              max="5"
+              step="1"
+            >
+            <span class="input-icon">🔬</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="channel">Channel Model</label>
+          <div class="input-wrapper">
+            <select id="channel">
+              <option value="AWGN">AWGN (Additive White Gaussian Noise)</option>
+              <option value="Rayleigh">Rayleigh Fading</option>
+              <option value="Rician">Rician Fading</option>
+            </select>
+            <span class="input-icon">📡</span>
+          </div>
+        </div>
+
+        <div class="backend-status" id="backendStatus">
+          <span class="status-indicator connected" id="statusIndicator"></span>
+          <span id="statusText">Backend Ready</span>
+        </div>
+
+        <div class="loading" id="loadingDiv">
+          <div class="spinner"></div>
+          <p>Processing...</p>
+        </div>
+
+        <div class="button-group" id="buttonGroup">
+          <button class="btn-primary" onclick="goToExecution()">
+            Run Framework
+          </button>
+          <button class="btn-secondary" onclick="resetForm()">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>Hybrid Quantum-Classical Framework | Version 1.0</p>
+      </div>
+    </div>
+  </div>
+
+<script>
+function goToExecution() {
+  const snr = document.getElementById("snr").value;
+  const qubits = document.getElementById("qubits").value;
+  const channel = document.getElementById("channel").value;
+
+  if (!snr || !qubits) {
+    alert("Please fill in all fields");
+    return;
+  }
+
+  // Show loading state
+  document.getElementById("buttonGroup").style.display = "none";
+  document.getElementById("loadingDiv").style.display = "block";
+
+  // Store values
+  localStorage.setItem("snr", snr);
+  localStorage.setItem("qubits", qubits);
+  localStorage.setItem("channel", channel);
+
+  // Simulate processing and redirect
+  setTimeout(() => {
+    window.location.href = "execution.html";
+  }, 1500);
+}
+
+function resetForm() {
+  document.getElementById("snr").value = "10";
+  document.getElementById("qubits").value = "2";
+  document.getElementById("channel").value = "AWGN";
+}
+
+// Check backend connection on load
+function checkBackend() {
+  // Simulate backend check (replace with actual API call)
+  fetch('/api/status', { method: 'GET' })
+    .then(response => {
+      if (response.ok) {
+        updateStatus(true, "Backend Connected");
+      } else {
+        updateStatus(false, "Backend Error");
+      }
+    })
+    .catch(error => {
+      updateStatus(false, "Backend Offline");
+    });
+}
+
+function updateStatus(connected, message) {
+  const indicator = document.getElementById("statusIndicator");
+  const text = document.getElementById("statusText");
+  
+  if (connected) {
+    indicator.classList.remove("disconnected");
+    indicator.classList.add("connected");
+  } else {
+    indicator.classList.remove("connected");
+    indicator.classList.add("disconnected");
+  }
+  
+  text.textContent = message;
+}
+
+// Check backend on page load
+window.addEventListener("load", () => {
+  checkBackend();
+});
+</script>
+
+</body>
+</html>
+
